@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "cetus"
+version = "0.1.0"
+description = "Cetus"
+authors = ["Vitaliy Boyarsky <boyarsky.vitaliy@live.com>"]
+readme = "readme.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.group.distributor.dependencies]
+cetus-distributor = { path = "cetus-distributor", develop = true }
+
+[tool.poetry.group.interceptor.dependencies]
+cetus-interceptor = { path = "cetus-interceptor", develop = true }
+
+[tool.poe]
+poetry_command = ""
+
+[tool.poe.tasks]
+isort = { ref = "exec isort", help = "Sort imports alphabetically." }
+style = { ref = "exec style", help = "Run static code analyser." }
+test = { ref = "exec test", help = "Run unit tests." }
+clean = { ref = "exec clean", help = "Clean workdir." }
+
+[tool.poe.tasks.exec]
+help = "Run a poetry command in all subprojects."
+args = [{ name = "poe_task", positional = true, required = true }]
+shell = "for d in ./cetus-*; do (if [ -f \"$d/pyproject.toml\" ]; then cd $d && echo `basename $d`; poetry $poe_task; fi); code=$(($code+$?)); done; exit $code"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

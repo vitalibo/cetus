@@ -1,0 +1,35 @@
+name: Continuous Integration (CI)
+
+on:
+  push:
+    branches: [ '**' ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          poetry self add 'poethepoet[poetry_plugin]'
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          cache: poetry
+
+      - name: Install dependencies
+        run: poetry exec install
+
+      - name: Check code styling
+        run: poetry style
+
+      - name: Run tests
+        run: poetry test
