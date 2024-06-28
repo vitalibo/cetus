@@ -18,6 +18,7 @@ pytest = "^7.4.4"
 pylint = "^3.0.3"
 isort = "^5.13.2"
 poethepoet = "^0.24.4"
+pyspark = "^3.3.0"
 
 [tool.poe]
 poetry_command = ""

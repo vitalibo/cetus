@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    }
+  ],
+  "type": "struct"
+}

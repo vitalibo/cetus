@@ -1,0 +1,20 @@
+dimensions:
+  path:
+    - dim1
+    - dim2
+    - dim3
+
+  file:
+    - dim4
+    - dim5
+    - dim6
+
+  body:
+    - dim7
+    - dim8
+    - dim9
+
+metrics:
+  - metric1
+  - metric2
+  - metric3
