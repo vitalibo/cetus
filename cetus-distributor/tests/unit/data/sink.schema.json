@@ -1,7 +1,11 @@
 {
   "fields": [
     {
-      "name": "id",
+      "name": "path",
+      "type": "string"
+    },
+    {
+      "name": "file",
       "type": "string"
     }
   ],

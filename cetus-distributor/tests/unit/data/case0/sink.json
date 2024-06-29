@@ -1,2 +1,6 @@
 [
+  {
+    "path": "v1/metadata.json",
+    "file": "{\"cols\": {\"dim4\": [], \"dim5\": [], \"dim6\": []}, \"length\": null}"
+  }
 ]

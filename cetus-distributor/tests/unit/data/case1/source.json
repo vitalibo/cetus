@@ -1,0 +1,15 @@
+[
+  {
+    "dim1": "value1",
+    "dim3": "value3",
+    "dim4": "value4",
+    "dim5": "value5",
+    "dim6": "value6",
+    "dim7": "value7",
+    "dim8": "value8",
+    "dim9": "value9",
+    "metric1": 1.1,
+    "metric2": 2.2,
+    "metric3": 3.3
+  }
+]

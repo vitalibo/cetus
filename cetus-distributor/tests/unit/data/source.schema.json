@@ -1,8 +1,52 @@
 {
   "fields": [
     {
-      "name": "id",
+      "name": "dim1",
       "type": "string"
+    },
+    {
+      "name": "dim2",
+      "type": "string"
+    },
+    {
+      "name": "dim3",
+      "type": "string"
+    },
+    {
+      "name": "dim4",
+      "type": "string"
+    },
+    {
+      "name": "dim5",
+      "type": "string"
+    },
+    {
+      "name": "dim6",
+      "type": "string"
+    },
+    {
+      "name": "dim7",
+      "type": "string"
+    },
+    {
+      "name": "dim8",
+      "type": "string"
+    },
+    {
+      "name": "dim9",
+      "type": "string"
+    },
+    {
+      "name": "metric1",
+      "type": "float"
+    },
+    {
+      "name": "metric2",
+      "type": "float"
+    },
+    {
+      "name": "metric3",
+      "type": "float"
     }
   ],
   "type": "struct"

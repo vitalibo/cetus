@@ -1,0 +1,14 @@
+[
+  {
+    "path": "v1/metadata.json",
+    "file": "{\"cols\": {\"dim4\": [\"value4\"], \"dim5\": [\"value5\"], \"dim6\": [\"value6\"]}, \"length\": 46}"
+  },
+  {
+    "path": "v1/value1/Unknown/value3",
+    "file": "{\"value7\":{\"value8\":{\"value9\":[1.1,2.2,3.3]}}}"
+  },
+  {
+    "path": "v1/value1/value2/value3",
+    "file": "{\"value7\":{\"value8\":{\"value9\":[1.2,2.3,3.4]}}}"
+  }
+]
