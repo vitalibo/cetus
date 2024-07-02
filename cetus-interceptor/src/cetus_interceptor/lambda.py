@@ -6,34 +6,49 @@ import boto3
 s3 = boto3.resource('s3')
 
 metadata = json.loads('{{ metadata }}')
-
-columns = metadata['columns']
-length = metadata['length']
+cols, length = metadata['cols'], metadata['length'] + 1
 
 
 def handler(event, context):  # pylint: disable=unused-argument
+    """
+    AWS Lambda@Edge handler.
+
+    :param event: CloudFront origin request event
+    :param context: Lambda context
+    :return: response object
+    """
+
     url = event['Records'][0]['cf']['request']['uri']
     params = url.split('/')
-    offset = body_offset(*params[len(columns):])
+    offset = content_offset(*params[len(cols):])
 
     if offset == -1:
-        return {
-            'status': 404,
-            'statusDescription': 'Not Found',
-            'body': 'Not found'
-        }
+        return response(404, 'Not Found')
 
-    obj = s3.Object('{{ bucket }}', '/'.join(params[:len(columns)]))
     body = (
-        obj.get(Range=f'bytes={offset * length + offset}-{(offset + 1) * length + offset}')['Body']
+        s3.Object('{{ bucket }}', '/'.join(params[:len(cols)]))
+        .get(Range=f'bytes={offset * length}-{(offset + 1) * length - 1}')['Body']
         .read()
         .decode('utf-8')
         .rstrip(' ')
     )
 
+    return response(200, 'OK', body=body)
+
+
+def response(status, status_description, body=None):
+    """
+    Create a response object.
+
+    :param status: HTTP status code
+    :param status_description: HTTP status description
+    :param body: Optional response body. If not provided, a default message will be returned.
+    :return: response object
+    """
+
     return {
-        'status': 200,
-        'statusDescription': 'OK',
+        'status': status,
+        'statusDescription': status_description,
         'headers': {
             'content-type': [
                 {
@@ -42,14 +57,28 @@ def handler(event, context):  # pylint: disable=unused-argument
                 }
             ]
         },
-        'body': body
+        'body': (
+            body
+            if body else
+            json.dumps({
+                'status': status,
+                'message': status_description
+            })
+        )
     }
 
 
-def body_offset(*params):
+def content_offset(*params):
+    """
+    Calculate the offset of the content to be returned based on the URL parameters.
+
+    :param params: URL parameters
+    :return: offset of the content to be returned
+    """
+
     try:
         return sum(
-            columns[i][param] * math.prod([len(j) for j in columns.values()][i + 1:])
+            cols[str(i)][param] * math.prod([len(j) for j in cols.values()][i + 1:])
             for i, param in enumerate(params)
         )
     except KeyError:

@@ -8,7 +8,8 @@ def create_job(config: Config) -> Job:
     return DistributionJob(
         None,
         None,
-        config)
+        config,
+        None)
 
 
 def create_spark(config: Config) -> Spark:  # pylint: disable=unused-argument

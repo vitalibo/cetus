@@ -1,6 +1,8 @@
+from unittest import mock
+
 import pytest
 from pyxis.config import ConfigFactory
-from pyxis.resources import resource
+from pyxis.resources import resource, resource_as_json
 
 from cetus_distributor.job import DistributionJob
 
@@ -13,6 +15,7 @@ from cetus_distributor.job import DistributionJob
     ])
 ])
 def test_job(case, spark):
+    mock_lambda = mock.Mock()
     job = DistributionJob(
         spark.create_source_from_resource(
             __file__,
@@ -22,9 +25,13 @@ def test_job(case, spark):
             __file__,
             f'data/{case}/sink.json',
             'data/sink.schema.json',
-            order_by=('path',)),
+            order_by=('path',), ignore_schema=True),
         ConfigFactory.load(resource(
             __file__,
-            f'data/{case}/config.yaml')))
+            f'data/{case}/config.json')),
+        mock_lambda)
 
     spark.submit(job)
+
+    mock_lambda.update_code.assert_called_once_with(
+        resource_as_json(__file__, f'data/{case}/metadata.json'))

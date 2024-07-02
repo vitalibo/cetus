@@ -1,9 +1,10 @@
-import json
 from functools import reduce
 
 from pyspark.sql import functions as fn
 from pyxis.config import Config
 from pyxis.pyspark import Job, Sink, Source, Spark
+
+from cetus_distributor.edge import LambdaEdge
 
 
 class DistributionJob(Job):
@@ -15,11 +16,13 @@ class DistributionJob(Job):
             self,
             source: Source,
             sink: Sink,
-            config: Config
+            config: Config,
+            lambda_edge: LambdaEdge
     ) -> None:
         self.source = source
         self.sink = sink
         self.config = config
+        self.lambda_edge = lambda_edge
 
     def transform(self, spark: Spark) -> None:
         dimensions, metrics = self.config.dimensions, self.config.metrics
@@ -53,22 +56,18 @@ class DistributionJob(Job):
             .agg(fn.max(fn.length(df.body))) \
             .collect()[0][0]
 
-        metadata = spark.create_dataframe([{
-            'path': f'{self.config.version}/metadata.json',
-            'file': json.dumps({
-                'cols': {
-                    key: sorted([row[key] for row in values.collect()])
-                    for key, values in zip(dimensions.file, file_cols)
-                },
-                'length': length
-            })
-        }])
-
         df = df \
             .withColumn('body', fn.rpad(df.body, length or 0, ' ')) \
             .groupby(df.path) \
             .agg(fn.collect_list(fn.struct(*dimensions.file, 'body')).alias('file')) \
-            .withColumn('file', fn.array_join(fn.transform(fn.sort_array('file'), lambda x: x.body), '')) \
-            .unionByName(metadata)
+            .withColumn('file', fn.array_join(fn.transform(fn.sort_array('file'), lambda x: x.body), ''))
 
         spark.load(self.sink, df)
+
+        self.lambda_edge.update_code({
+            'cols': {
+                str(i): {value: j for j, value in enumerate(sorted([row[0] for row in values.collect()]))}
+                for i, values in enumerate(file_cols)
+            },
+            'length': length
+        })
