@@ -12,6 +12,6 @@ build:
 	python3 setup.py sdist bdist_wheel
 
 clean:
-	rm -rf ./.pytest_cache ./build ./dist ./src/*.egg-info
+	rm -rf ./.pytest_cache ./build ./dist ./src/*.egg-info ./src/cetus/cdk.out
 
 .PHONY: install style test build clean

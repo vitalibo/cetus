@@ -9,7 +9,7 @@ class InterceptorStack(Stack):
     Interceptor stack.
     """
 
-    def __init__(self, scope, id, name, env, **kwargs):  # pylint: disable=redefined-builtin
+    def __init__(self, scope, id, config, **kwargs):  # pylint: disable=redefined-builtin
         super().__init__(scope, id, **kwargs)
 
         role = aws_iam.Role(
@@ -30,7 +30,7 @@ class InterceptorStack(Stack):
                                 's3:GetObject',
                             ],
                             resources=[
-                                f'arn:aws:s3:::{name}-{env}/*'
+                                f'arn:aws:s3:::{config.name}-{config.env}-cdn-origin/*'
                             ]
                         )
                     ]
@@ -40,11 +40,11 @@ class InterceptorStack(Stack):
 
         lambda_edge = aws_lambda.Function(
             self, 'Lambda',
-            function_name=f'{name}-{env}-interceptor',
+            function_name=f'{config.name}-{config.env}-interceptor',
             runtime=aws_lambda.Runtime.PYTHON_3_9,
             role=role,
             handler='index.handler',
-            code=aws_lambda.Code.from_inline(resource_as_str(__file__, '../job.py'))
+            code=aws_lambda.Code.from_inline(self.code(config))
         )
 
         lambda_edge_version = aws_lambda.Version(
@@ -66,7 +66,14 @@ class InterceptorStack(Stack):
                     )
                 ],
                 origin=aws_cloudfront_origins.S3Origin(
-                    aws_s3.Bucket.from_bucket_name(self, 'Bucket', f'{name}-{env}'))
+                    aws_s3.Bucket.from_bucket_name(
+                        self, 'Bucket', f'{config.name}-{config.env}-cdn-origin'))
             ),
             price_class=aws_cloudfront.PriceClass.PRICE_CLASS_ALL
         )
+
+    @staticmethod
+    def code(config):
+        return resource_as_str(__file__, '../lambda.py') \
+            .replace('{{ metadata }}', config.get('interceptor.metadata', '{}')) \
+            .replace('{{ bucket }}', f'{config.name}-{config.env}-cdn-origin')
