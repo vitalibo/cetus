@@ -12,6 +12,7 @@ python = "^3.9"
 pyxis = { git = "https://github.com/vitalibo/pyxis.git", tag = "0.2.1-pyspark" }
 pydantic = "^2.5.3"
 pyyaml = "^6.0.1"
+aws-cdk-lib = "^2.147.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.4"
@@ -19,6 +20,7 @@ pylint = "^3.0.3"
 isort = "^5.13.2"
 poethepoet = "^0.24.4"
 pyspark = "^3.3.0"
+toml = "^0.10.2"
 
 [tool.poe]
 poetry_command = ""
