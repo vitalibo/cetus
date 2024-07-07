@@ -31,4 +31,3 @@ def synth(cls, *args, **kwargs):
     synthesized = app.synth()
     template = synthesized.get_stack_by_name('Stack').template
     return yaml.dump(template, sort_keys=False)
-

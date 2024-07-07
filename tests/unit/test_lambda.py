@@ -65,7 +65,7 @@ def test_handler(mock_json_loads, mock_session, params, expected_range, expected
         }
     }
 
-    aws_lambda = importlib.import_module('cetus_interceptor.lambda')
+    aws_lambda = importlib.import_module('cetus.lambda')
     importlib.reload(aws_lambda)
     actual = aws_lambda.handler(create_event(url), mock.Mock())
 

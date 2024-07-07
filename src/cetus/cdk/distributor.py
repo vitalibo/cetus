@@ -1,18 +1,17 @@
 import os.path
 
-from aws_cdk import (
-    aws_s3, aws_glue,
-    aws_s3_assets,
-    Stack, RemovalPolicy, Duration, aws_iam
-)
+from aws_cdk import Duration, RemovalPolicy, Stack, aws_glue, aws_iam, aws_s3, aws_s3_assets
 from pyxis.config import Config
 
 ROOT_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), *(('..',) * 2)))
 
 
 class DistributorStack(Stack):
+    """
+    Distributor stack.
+    """
 
-    def __init__(self, scope, id, config: Config, **kwargs):
+    def __init__(self, scope, id, config: Config, **kwargs):  # pylint: disable=redefined-builtin
         super().__init__(scope, id, **kwargs)
 
         s3_bucket = aws_s3.Bucket(
@@ -46,7 +45,7 @@ class DistributorStack(Stack):
             }
         )
 
-        glue_job = aws_glue.CfnJob(
+        aws_glue.CfnJob(
             self, 'Job',
             role=role.role_arn,
             glue_version='4.0',

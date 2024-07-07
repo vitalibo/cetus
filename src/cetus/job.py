@@ -4,7 +4,7 @@ from pyspark.sql import functions as fn
 from pyxis.config import Config
 from pyxis.pyspark import Job, Sink, Source, Spark
 
-from cetus_distributor.edge import LambdaEdge
+from cetus.edge import LambdaEdge
 
 
 class DistributionJob(Job):

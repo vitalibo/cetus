@@ -1,7 +1,7 @@
 from pyxis.config import Config
 from pyxis.pyspark import Job, Spark
 
-from cetus_distributor.job import DistributionJob
+from cetus.job import DistributionJob
 
 
 def create_job(config: Config) -> Job:

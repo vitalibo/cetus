@@ -4,7 +4,7 @@ import pytest
 from pyxis.config import ConfigFactory
 from pyxis.resources import resource, resource_as_json
 
-from cetus_distributor.job import DistributionJob
+from cetus.job import DistributionJob
 
 
 @pytest.mark.parametrize('case', [

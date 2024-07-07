@@ -1,20 +1,15 @@
 import time
 
-from aws_cdk import (
-    aws_lambda,
-    aws_iam,
-    aws_cloudfront,
-    aws_cloudfront_origins,
-    Stack,
-    RemovalPolicy,
-    aws_s3
-)
+from aws_cdk import RemovalPolicy, Stack, aws_cloudfront, aws_cloudfront_origins, aws_iam, aws_lambda, aws_s3
 from pyxis.resources import resource_as_str
 
 
 class InterceptorStack(Stack):
+    """
+    Interceptor stack.
+    """
 
-    def __init__(self, scope, id, name, env, **kwargs):
+    def __init__(self, scope, id, name, env, **kwargs):  # pylint: disable=redefined-builtin
         super().__init__(scope, id, **kwargs)
 
         role = aws_iam.Role(
@@ -58,7 +53,7 @@ class InterceptorStack(Stack):
             lambda_=lambda_edge
         )
 
-        cloudfront = aws_cloudfront.Distribution(
+        aws_cloudfront.Distribution(
             self, 'CloudFront',
             comment='Cetus API Gateway',
             default_behavior=aws_cloudfront.BehaviorOptions(

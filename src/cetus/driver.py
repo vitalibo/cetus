@@ -3,7 +3,7 @@ import sys
 
 from pyxis.config import ConfigFactory
 
-from cetus_distributor import factory
+from cetus import factory
 
 
 def main() -> None:
