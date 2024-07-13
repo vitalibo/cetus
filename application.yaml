@@ -1,0 +1,12 @@
+env: ${args.env|envs.ENV}
+name: 'cetus'
+
+logging:
+  level: ${envs.LOG_LEVEL?INFO}
+  format: '%(asctime)s.%(msecs)03d %(levelname)-8s %(module)s.%(funcName)s(%(lineno)d) %(message)s'
+  datefmt: '%Y-%m-%d %H:%M:%S'
+
+distributor:
+  cron: '0 0 * * ? *'
+
+file_assets_bucket_name: 'vitalibo-sandbox-us-east-1'

@@ -1,6 +1,7 @@
 import logging
 import sys
 
+import pyxis.aws.config  # noqa pylint: disable=unused-import
 from pyxis.config import ConfigFactory
 
 from cetus import factory

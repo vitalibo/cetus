@@ -39,6 +39,23 @@ class DistributorStack(Stack):
                             resources=[
                                 f'{bucket.bucket_arn}/*'
                             ]
+                        ),
+                        aws_iam.PolicyStatement(
+                            actions=[
+                                'logs:CreateLogStream',
+                                'logs:PutLogEvents'
+                            ],
+                            resources=[
+                                f'arn:aws:logs:{self.region}:{self.account}:log-group:/aws-glue/*'
+                            ]
+                        ),
+                        aws_iam.PolicyStatement(
+                            actions=[
+                                'cloudwatch:PutMetricData'
+                            ],
+                            resources=[
+                                '*'
+                            ]
                         )
                     ]
                 )
@@ -55,7 +72,8 @@ class DistributorStack(Stack):
                 python_version='3',
                 script_location=aws_s3_assets.Asset(
                     self, 'DriverAsset',
-                    path=os.path.join(DIR, 'src', 'cetus', 'driver.py')
+                    path=os.path.join(DIR, 'src', 'cetus', 'driver.py'),
+                    readers=[role]
                 ).s3_object_url
             ),
             worker_type='G.1X',
@@ -66,15 +84,19 @@ class DistributorStack(Stack):
                 '--env': config.env,
                 '--additional-python-modules': ','.join(self.requirements()),
                 '--extra-py-files': ','.join(self.dist()),
-                '--s3_bucket': bucket.bucket_name,
+                '--s3-bucket': bucket.bucket_name,
+                '--config-file': aws_s3_assets.Asset(
+                    self, 'ConfigAsset',
+                    path=os.path.join(DIR, 'application.yaml'),
+                ).s3_object_url
             }
         )
 
         aws_glue.CfnTrigger(
             self, 'Trigger',
             name=f'{config.name}-{config.env}-distributor-trigger',
-            type="SCHEDULED",
-            schedule=f"cron({config.distributor.cron})",
+            type='SCHEDULED',
+            schedule=f'cron({config.distributor.cron})',
             start_on_creation=True,
             actions=[
                 aws_glue.CfnTrigger.ActionProperty(job_name=job.ref)
@@ -87,11 +109,11 @@ class DistributorStack(Stack):
                 continue
 
             yield aws_s3_assets.Asset(
-                self, f'ExtraPyFiles{file}',
+                self, f'ExtraPyFiles{file}Asset',
                 path=os.path.join(DIR, 'dist', file)
             ).s3_object_url
 
     @staticmethod
     def requirements():
-        with open(os.path.join(DIR, 'requirements.txt'), 'r') as f:
+        with open(os.path.join(DIR, 'requirements.txt'), 'r', encoding='utf-8') as f:
             return f.read().splitlines()
