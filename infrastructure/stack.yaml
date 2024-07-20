@@ -90,6 +90,24 @@ Resources:
                 Effect: Allow
                 Resource:
                   - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Unit}-${Environment}-${Name}-interceptor'
+              - Action:
+                  - cloudformation:DescribeStacks
+                  - cloudformation:UpdateStack
+                Effect: Allow
+                Resource:
+                  - !Ref 'AWS::StackId'
+              - Action:
+                  - cloudfront:*
+                Effect: Allow
+                Resource:
+                  - '*'
+              - Action:
+                  - lambda:GetFunction
+                  - lambda:EnableReplication*
+                  - lambda:DisableReplication*
+                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*'
 
   DistributorJob:
     Type: AWS::Glue::Job
@@ -107,6 +125,8 @@ Resources:
         --extra-py-files: !Sub '${ScriptLocation}/cetus-0.1.0-py3-none-any.whl'
         --s3-bucket: !Ref OriginBucket
         --config-file: !Sub '${ScriptLocation}/application.yaml'
+        --stack-name: !Ref 'AWS::StackName'
+        --function-name: !Sub '${Unit}-${Environment}-${Name}-interceptor'
       MaxRetries: 0
       NumberOfWorkers: 2
       Timeout: 60
@@ -157,20 +177,18 @@ Resources:
                   - logs:PutLogEvents
                 Effect: Allow
                 Resource:
-                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/cloudfront/*'
+                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/cloudfront/*'
         - PolicyName: AWSLambdaReplicator
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Action:
-                  - lambda:GetFunction
                   - lambda:CreateFunction
                   - lambda:DeleteFunction
-                  - lambda:EnableReplication*
-                  - lambda:DisableReplication*
+                  - lambda:DisableReplication
                 Effect: Allow
                 Resource:
-                  - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*'
+                  - !Sub 'arn:aws:lambda:*:${AWS::AccountId}:function:*'
               - Action:
                   - iam:PassRole
                 Effect: Allow

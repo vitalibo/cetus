@@ -1,6 +1,10 @@
 env: ${args.env|envs.ENV}
 name: 'cetus'
 
+s3_bucket: ${args.s3_bucket|envs.S3_BUCKET}
+stack_name: ${args.stack_name|envs.STACK_NAME}
+function_name: ${args.function_name|envs.FUNCTION_NAME}
+
 logging:
   level: ${envs.LOG_LEVEL?INFO}
   format: '%(asctime)s.%(msecs)03d %(levelname)-8s %(module)s.%(funcName)s(%(lineno)d) %(message)s'
