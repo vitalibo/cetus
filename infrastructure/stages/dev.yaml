@@ -1,0 +1,15 @@
+Parameters:
+  Unit: "dp"
+  Environment: "dev"
+  Name: "cetus"
+  Bucket: "vitalibo-sandbox-us-east-1"
+Tags:
+  Environment: "dev"
+  CostCenter: "data-platform"
+  Application: "cetus"
+StackPolicy:
+  Statement:
+    - Effect: Allow
+      NotAction: Update:Delete
+      Principal: '*'
+      Resource: '*'

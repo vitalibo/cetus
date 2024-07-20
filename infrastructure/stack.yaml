@@ -1,0 +1,253 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  Unit:
+    Type: String
+    Description: 'Unit name'
+  Name:
+    Type: String
+    Description: 'Application name'
+  Environment:
+    Type: String
+    Description: 'Environment name'
+  ScriptLocation:
+    Type: String
+    Description: 'S3 location where the scripts is stored'
+  AdditionalPythonModules:
+    Type: String
+    Description: 'Additional Python modules to install'
+  InterceptorFunctionVersion:
+    Type: String
+    Description: 'Version of the interceptor function'
+    Default: 'NULL'
+
+Conditions:
+  HasInterceptorFunctionVersion: !Not [ !Equals [ !Ref InterceptorFunctionVersion, 'NULL' ] ]
+
+Resources:
+  OriginBucket:
+    #    DeletionPolicy: Retain
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${Unit}-${Environment}-${Name}-cdn-origin'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 30
+            Status: Enabled
+
+  DistributorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Unit}-${Environment}-${Name}-distributor-role'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: glue.amazonaws.com
+        Version: '2012-10-17'
+      Policies:
+        - PolicyName: Runtime
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Effect: Allow
+                Resource:
+                  - !Join
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - Fn::Select: [ 2, Fn::Split: [ '/', Ref: ScriptLocation ] ]
+                  - !Join
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - Fn::Select: [ 2, Fn::Split: [ '/', Ref: ScriptLocation ] ]
+                      - !Sub "/${Unit}/${Environment}/${Name}/*"
+              - Action:
+                  - s3:PutObject
+                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:s3:::${Unit}-${Environment}-${Name}-cdn-origin/*'
+              - Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-glue/*'
+              - Action:
+                  - cloudwatch:PutMetricData
+                Effect: Allow
+                Resource:
+                  - '*'
+              - Action:
+                  - lambda:UpdateFunctionCode
+                  - lambda:PublishVersion
+                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${Unit}-${Environment}-${Name}-interceptor'
+
+  DistributorJob:
+    Type: AWS::Glue::Job
+    Properties:
+      Name: !Sub '${Unit}-${Environment}-${Name}-distributor-job'
+      Command:
+        Name: glueetl
+        PythonVersion: '3'
+        ScriptLocation: !Sub '${ScriptLocation}/driver.py'
+      GlueVersion: '4.0'
+      Role: !GetAtt DistributorRole.Arn
+      NonOverridableArguments:
+        --env: !Ref Environment
+        --additional-python-modules: !Ref AdditionalPythonModules
+        --extra-py-files: !Sub '${ScriptLocation}/cetus-0.1.0-py3-none-any.whl'
+        --s3-bucket: !Ref OriginBucket
+        --config-file: !Sub '${ScriptLocation}/application.yaml'
+      MaxRetries: 0
+      NumberOfWorkers: 2
+      Timeout: 60
+      WorkerType: G.1X
+
+  DistributorTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Name: !Sub '${Unit}-${Environment}-${Name}-distributor-trigger'
+      Actions:
+        - JobName: !Ref DistributorJob
+      Schedule: cron(0 0 * * ? *)
+      StartOnCreation: true
+      Type: SCHEDULED
+
+  InterceptorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${Unit}-${Environment}-${Name}-interceptor-role'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: edgelambda.amazonaws.com
+        Version: '2012-10-17'
+      Policies:
+        - PolicyName: Runtime
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - s3:GetObject
+                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:s3:::${Unit}-${Environment}-${Name}-cdn-origin/*'
+        - PolicyName: AWSCloudFrontLogger
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/cloudfront/*'
+        - PolicyName: AWSLambdaReplicator
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - lambda:GetFunction
+                  - lambda:CreateFunction
+                  - lambda:DeleteFunction
+                  - lambda:EnableReplication*
+                  - lambda:DisableReplication*
+                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*'
+              - Action:
+                  - iam:PassRole
+                Effect: Allow
+                Resource:
+                  - '*'
+                Condition:
+                  StringLikeIfExists:
+                    'iam:PassedToService': 'lambda.amazonaws.com'
+              - Action:
+                  - cloudfront:ListDistributionsByLambdaFunction
+                Effect: Allow
+                Resource:
+                  - '*'
+
+  InterceptorFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${Unit}-${Environment}-${Name}-interceptor'
+      Handler: index.handler
+      Role: !GetAtt InterceptorRole.Arn
+      Runtime: python3.9
+      Timeout: 10
+      MemorySize: 256
+      Code:
+        ZipFile: ...
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref OriginBucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource: !Sub "arn:aws:s3:::${OriginBucket}/*"
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
+
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub "CloudFront Origin AccessIdentity"
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          LambdaFunctionAssociations: !If
+            - HasInterceptorFunctionVersion
+            - - EventType: origin-request
+                LambdaFunctionARN: !Ref InterceptorFunctionVersion
+                IncludeBody: true
+            - !Ref 'AWS::NoValue'
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+          TargetOriginId: S3Bucket
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: "658327ea-f89d-4fab-a63d-7e88639e58f6"
+          OriginRequestPolicyId: "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf"
+          ResponseHeadersPolicyId: "5cc3b908-e619-4b99-88e5-2cf7f45965bd"
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+          - Id: S3Bucket
+            DomainName: !Sub "${OriginBucket}.s3.amazonaws.com"
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
+        PriceClass: PriceClass_All
+
+Outputs:
+  OriginBucket:
+    Value: !Ref OriginBucket
+  DistributorRole:
+    Value: !Ref DistributorRole
+  DistributorJob:
+    Value: !Ref DistributorJob
