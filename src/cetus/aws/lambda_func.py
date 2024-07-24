@@ -9,7 +9,7 @@ def code():
     file = os.path.normpath(os.path.join(
         os.path.dirname(__file__), '../../../dist/cetus-0.1.0-py3-none-any.whl'))
     if '.whl' in __file__:
-        file = __file__.split('whl')[0] + 'whl'
+        file = __file__.split('whl', maxsplit=1)[0] + 'whl'
 
     if not os.path.exists(file):
         raise FileNotFoundError(file)
@@ -29,17 +29,17 @@ class LambdaFunction:
         self.function_name = function_name
         self.bucket = bucket
 
-    def update_function_code(self, code: str) -> str:
+    def update_function_code(self, src_code: str) -> str:
         """
         Update AWS Lambda function code.
 
-        :param code: source code
+        :param src_code: source code
         :return: function ARN
         """
 
         buffer = io.BytesIO()
         with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
-            zip_file.writestr('index.py', code.encode('utf-8'))
+            zip_file.writestr('index.py', src_code.encode('utf-8'))
 
         response = self._client.update_function_code(
             FunctionName=self.function_name,

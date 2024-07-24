@@ -14,3 +14,7 @@ distributor:
   cron: '0 0 * * ? *'
 
 file_assets_bucket_name: 'vitalibo-sandbox-us-east-1'
+
+spark:
+  properties:
+    'spark.sql.session.timeZone': 'UTC'
