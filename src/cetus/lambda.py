@@ -1,4 +1,5 @@
 import json
+import logging
 import math
 
 import boto3
@@ -6,7 +7,7 @@ import boto3
 s3 = boto3.resource('s3')
 
 metadata = json.loads('{{ metadata }}')
-cols, length = metadata['cols'], metadata['length'] + 1
+cols, length = metadata['cols'], metadata['length']
 
 
 def handler(event, context):  # pylint: disable=unused-argument
@@ -20,20 +21,24 @@ def handler(event, context):  # pylint: disable=unused-argument
 
     url = event['Records'][0]['cf']['request']['uri']
     params = url.split('/')
-    offset = content_offset(*params[len(cols):])
+    offset = content_offset(*params[len(cols) + 1:])
 
     if offset == -1:
         return response(404, 'Not Found')
 
-    body = (
-        s3.Object('{{ bucket }}', '/'.join(params[:len(cols)]))
-        .get(Range=f'bytes={offset * length}-{(offset + 1) * length - 1}')['Body']
-        .read()
-        .decode('utf-8')
-        .rstrip(' ')
-    )
+    try:
+        body = (
+            s3.Object('{{ bucket }}', '/'.join(params[:len(cols) + 1])[1:])
+            .get(Range=f'bytes={offset * length}-{(offset + 1) * length - 1}')['Body']
+            .read()
+            .decode('utf-8')
+            .rstrip(' ')
+        )
 
-    return response(200, 'OK', body=body)
+        return response(200, 'OK', body=body)
+    except Exception as e:
+        logging.error(e)
+        return response(404, 'Not Found')
 
 
 def response(status, status_description, body=None):

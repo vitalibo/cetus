@@ -40,11 +40,11 @@ def not_found():
 @mock.patch('boto3.resource')
 @mock.patch('json.loads')
 @pytest.mark.parametrize('params, expected_range, expected_response', [
-    ('Africa/2020/1', 'bytes=0-3', ok()),
-    ('Africa/2020/2', 'bytes=4-7', ok()),
-    ('Asia/2022/2', 'bytes=84-87', ok()),
-    ('Europe/2022/2', 'bytes=132-135', ok()),
-    ('South America/2022/4', 'bytes=236-239', ok()),
+    ('Africa/2020/1', 'bytes=0-2', ok()),
+    ('Africa/2020/2', 'bytes=3-5', ok()),
+    ('Asia/2022/2', 'bytes=63-65', ok()),
+    ('Europe/2022/2', 'bytes=99-101', ok()),
+    ('South America/2022/4', 'bytes=177-179', ok()),
     ('A/2020/1', None, not_found()),
     ('Africa/2019/1', None, not_found()),
     ('Africa/2020/0', None, not_found()),
@@ -55,7 +55,7 @@ def test_handler(mock_json_loads, mock_session, params, expected_range, expected
     mock_obj = mock.Mock()
     mock_obj.get.return_value = {'Body': BytesIO(b'{"value": 1}     ')}
     mock_s3.Object.return_value = mock_obj
-    url = f'/Toys/Holiday_Sale/{params}'
+    url = f'/v1/Toys/Holiday_Sale/{params}'
     mock_json_loads.return_value = {
         'length': 3,
         'cols': {
@@ -71,7 +71,7 @@ def test_handler(mock_json_loads, mock_session, params, expected_range, expected
 
     assert actual == expected_response
     if expected_range:
-        mock_s3.Object.assert_called_once_with('{{ bucket }}', '/Toys/Holiday_Sale')
+        mock_s3.Object.assert_called_once_with('{{ bucket }}', 'v1/Toys/Holiday_Sale')
         mock_obj.get.assert_called_once_with(Range=expected_range)
     else:
         mock_s3.Object.assert_not_called()
