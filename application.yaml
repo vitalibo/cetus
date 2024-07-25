@@ -18,3 +18,27 @@ file_assets_bucket_name: 'vitalibo-sandbox-us-east-1'
 spark:
   properties:
     'spark.sql.session.timeZone': 'UTC'
+
+source:
+  format: csv
+  path: 's3://vitalibo-sandbox-us-east-1/foo.csv'
+  header: true
+  inferSchema: true
+
+job:
+  version: v1
+  scale: 2
+  dimensions:
+    path:
+      - Month
+      - Region
+    file:
+      - Category
+      - Customer Segment
+      - Sales Channel
+    body:
+      - Product
+  metrics:
+    - Sales
+    - Profit
+    - Quantity

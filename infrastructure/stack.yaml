@@ -59,6 +59,12 @@ Resources:
                   - s3:ListBucket
                 Effect: Allow
                 Resource:
+                  - '*'
+              - Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Effect: Allow
+                Resource:
                   - !Join
                     - ''
                     - - 'arn:aws:s3:::'
