@@ -6,10 +6,10 @@ from unittest import mock
 
 from pyxis.config import Config
 
-from cetus.edge import Distribution, LambdaEdge, LambdaFunction, Stack, code
+from cetus.edge import Distribution, LambdaEdge, LambdaFunction, Stack, source_code
 
 
-@mock.patch('cetus.edge.code')
+@mock.patch('cetus.edge.source_code')
 @mock.patch('cetus.edge.LambdaFunction')
 @mock.patch('cetus.edge.Stack')
 @mock.patch('cetus.edge.Distribution')
@@ -19,10 +19,10 @@ def test_update_code(mock_distribution, mock_stack, mock_lambda, mock_code):
     mock_code.return_value = 'python_code {{ bucket }} {{ metadata }}'
     lambda_edge = LambdaEdge(Config({'bucket_name': 'foo', 'function_name': 'bar', 'stack_name': 'baz'}))
 
-    lambda_edge.update_code({'foo': 'bar'})
+    lambda_edge.update_code({'foo': 'bar', 'length': 3})
 
     mock_lambda.assert_called_once_with('bar')
-    mock_lambda.return_value.update_function_code.assert_called_once_with('python_code foo {"foo": "bar"}')
+    mock_lambda.return_value.update_function_code.assert_called_once_with('python_code foo {"foo": "bar", "length": 3}')
     mock_stack.assert_called_once_with('baz')
     mock_stack.return_value.update.assert_called_once_with(InterceptorFunctionVersion='arn..function:1')
     mock_distribution.assert_called_once_with('QWERTY')
@@ -109,12 +109,12 @@ def test_lambda_update_function_code(mock_boto3):
             assert file.read().decode('utf-8') == 'print("Hello, World!")'
 
 
-def test_code():
+def test_source_code():
     subprocess.run(
         ['make', 'build'],
         cwd=os.path.join(os.path.dirname(__file__), '../../'),
         check=True)
 
-    actual = code()
+    actual = source_code()
 
     assert 'def handler(event, context):' in actual

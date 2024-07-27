@@ -18,18 +18,19 @@ class LambdaEdge:
         self.config = config
 
     def update_code(self, metadata: dict) -> None:
-        code_str = code()
-        code_str = code_str \
+        if metadata['length'] is None:
+            logging.info('nothing to update')
+            return
+
+        code = source_code() \
             .replace('{{ bucket }}', self.config.bucket_name) \
             .replace('{{ metadata }}', json.dumps(metadata))
 
-        func = LambdaFunction(self.config.function_name)
-        function_arn = func.update_function_code(code_str)
+        function = LambdaFunction(self.config.function_name)
+        function_arn = function.update_function_code(code)
 
         stack = Stack(self.config.stack_name)
-        outputs = stack.update(
-            InterceptorFunctionVersion=function_arn
-        )
+        outputs = stack.update(InterceptorFunctionVersion=function_arn)
 
         cloudfront = Distribution(outputs['CloudFrontDistributionId'])
         cloudfront.invalidate('/*')
@@ -111,20 +112,6 @@ class Distribution:
         )
 
 
-def code():
-    file = os.path.normpath(os.path.join(
-        os.path.dirname(__file__), '../../dist/cetus-0.1.0-py3-none-any.whl'))
-    if '.whl' in __file__:
-        file = __file__.split('whl', maxsplit=1)[0] + 'whl'
-
-    if not os.path.exists(file):
-        raise FileNotFoundError(file)
-
-    with zipfile.ZipFile(file, 'r') as archive:
-        with archive.open('cetus/lambda.py') as file:
-            return file.read().decode('utf-8')
-
-
 class LambdaFunction:
     """
     Manage AWS Lambda function.
@@ -153,3 +140,17 @@ class LambdaFunction:
         )
 
         return response['FunctionArn']
+
+
+def source_code():
+    file = os.path.normpath(os.path.join(
+        os.path.dirname(__file__), '../../dist/cetus-0.1.0-py3-none-any.whl'))
+    if '.whl' in __file__:
+        file = __file__.split('whl', maxsplit=1)[0] + 'whl'
+
+    if not os.path.exists(file):
+        raise FileNotFoundError(file)
+
+    with zipfile.ZipFile(file, 'r') as archive:
+        with archive.open('cetus/lambda.py') as file:
+            return file.read().decode('utf-8')
