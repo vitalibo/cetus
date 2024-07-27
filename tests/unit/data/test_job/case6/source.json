@@ -1,0 +1,389 @@
+[
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 1
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 2
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 3
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 5
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 7
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 9
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 10
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 11
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 13
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 14
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 15
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 17
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 19
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 21
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 22
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 23
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 25
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 26
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 27
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 29
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 31
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 33
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 34
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 35
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 37
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 38
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 39
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 41
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 43
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 45
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 46
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-a",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 47
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 49
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 50
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 51
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 53
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 55
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 57
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 58
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-a",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 59
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-a",
+    "dim6": "dim6-b",
+    "metric1": 61
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-a",
+    "metric1": 62
+  },
+  {
+    "dim1": "dim1-b",
+    "dim2": "dim2-b",
+    "dim3": "dim3-b",
+    "dim4": "dim4-b",
+    "dim5": "dim5-b",
+    "dim6": "dim6-b",
+    "metric1": 63
+  }
+]

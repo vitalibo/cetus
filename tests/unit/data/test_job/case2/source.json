@@ -1,0 +1,20 @@
+[
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-a",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-a",
+    "metric1": 0
+  },
+  {
+    "dim1": "dim1-a",
+    "dim2": "dim2-b",
+    "dim3": "dim3-a",
+    "dim4": "dim4-a",
+    "dim5": "dim5-a",
+    "dim6": "dim6-a",
+    "metric1": 1
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "version": "v1",
+  "scale": 2,
+  "dimensions": {
+    "path": [
+      "dim1",
+      "dim2"
+    ],
+    "file": [
+      "dim3"
+    ],
+    "body": [
+      "dim4",
+      "dim5",
+      "dim6"
+    ]
+  },
+  "metrics": [
+    "metric1"
+  ]
+}

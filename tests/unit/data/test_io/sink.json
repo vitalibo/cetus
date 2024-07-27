@@ -1,0 +1,10 @@
+[
+  {
+    "path": "file1",
+    "file": "{json1}"
+  },
+  {
+    "path": "file2",
+    "file": "{json2}"
+  }
+]

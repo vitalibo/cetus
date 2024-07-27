@@ -1,0 +1,13 @@
+{
+  "fields": [
+    {
+      "name": "path",
+      "type": "string"
+    },
+    {
+      "name": "file",
+      "type": "string"
+    }
+  ],
+  "type": "struct"
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "path": "v1/dim1-a/dim2-a",
+    "file": "{\"dim6-a\":[0.0]}"
+  },
+  {
+    "path": "v1/dim1-a/dim2-b",
+    "file": "{\"dim6-a\":[1.0]}"
+  }
+]
