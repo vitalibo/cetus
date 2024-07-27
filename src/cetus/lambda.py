@@ -1,6 +1,7 @@
 import json
 import logging
 import math
+import urllib.parse
 
 import boto3
 
@@ -19,14 +20,11 @@ def handler(event, context):  # pylint: disable=unused-argument
     :return: response object
     """
 
-    url = event['Records'][0]['cf']['request']['uri']
-    params = url.split('/')
-    offset = content_offset(*params[len(cols) + 1:])
-
-    if offset == -1:
-        return response(404, 'Not Found')
-
     try:
+        request_uri = event['Records'][0]['cf']['request']['uri']
+        params = urllib.parse.unquote(request_uri).split('/')
+        offset = content_offset(*params[len(cols) + 1:])
+
         body = (
             s3.Object('{{ bucket }}', '/'.join(params[:len(cols) + 1])[1:])
             .get(Range=f'bytes={offset * length}-{(offset + 1) * length - 1}')['Body']
@@ -81,10 +79,7 @@ def content_offset(*params):
     :return: offset of the content to be returned
     """
 
-    try:
-        return sum(
-            cols[str(i)][param] * math.prod([len(j) for j in cols.values()][i + 1:])
-            for i, param in enumerate(params)
-        )
-    except KeyError:
-        return -1
+    return sum(
+        cols[str(i)][param] * math.prod([len(j) for j in cols.values()][i + 1:])
+        for i, param in enumerate(params)
+    )
