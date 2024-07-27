@@ -47,7 +47,10 @@ class DistributionJob(Job):
         file_cols = [df.select(i).distinct() for i in dimensions.file]
 
         df = df \
-            .join(reduce(lambda a, b: a.crossJoin(b), file_cols), dimensions.file, 'full_outer') \
+            .join(
+                reduce(lambda a, b: a.crossJoin(b), file_cols + [df.select('path').distinct()]),
+                dimensions.file + ['path'],
+                'full_outer') \
             .fillna('{}', 'body') \
             .cache()
 
