@@ -18,10 +18,10 @@ class LambdaEdge:
     def update_code(self, metadata: dict) -> None:
         code_str = code()
         code_str = code_str \
-            .replace('{{ bucket }}', self.config.s3_bucket) \
+            .replace('{{ bucket }}', self.config.bucket_name) \
             .replace('{{ metadata }}', json.dumps(metadata))
 
-        func = LambdaFunction(self.config.function_name, self.config.s3_bucket)
+        func = LambdaFunction(self.config.function_name)
         function_arn = func.update_function_code(code_str)
 
         stack = Stack(self.config.stack_name)

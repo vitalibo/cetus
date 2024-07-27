@@ -50,7 +50,7 @@ Resources:
               Service: glue.amazonaws.com
         Version: '2012-10-17'
       Policies:
-        - PolicyName: Runtime
+        - PolicyName: Demo
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -59,7 +59,12 @@ Resources:
                   - s3:ListBucket
                 Effect: Allow
                 Resource:
-                  - '*'
+                  - 'arn:aws:s3:::vitalibo-sandbox-us-east-1'
+                  - 'arn:aws:s3:::vitalibo-sandbox-us-east-1/cetus/*'
+        - PolicyName: Runtime
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
               - Action:
                   - s3:GetObject
                   - s3:ListBucket
@@ -106,7 +111,7 @@ Resources:
                   - cloudfront:*
                 Effect: Allow
                 Resource:
-                  - '*'
+                  - !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/*'
               - Action:
                   - lambda:GetFunction
                   - lambda:EnableReplication*
@@ -130,10 +135,12 @@ Resources:
         --additional-python-modules: !Ref AdditionalPythonModules
         --extra-py-files: !Sub '${ScriptLocation}/cetus-0.1.0-py3-none-any.whl'
         --enable-auto-scaling: 'true'
-        --s3-bucket: !Ref OriginBucket
         --config-file: !Sub '${ScriptLocation}/application.yaml'
+        --bucket-name: !Ref OriginBucket
         --stack-name: !Ref 'AWS::StackName'
         --function-name: !Sub '${Unit}-${Environment}-${Name}-interceptor'
+      DefaultArguments:
+        --frac: '0.1'
       MaxRetries: 0
       NumberOfWorkers: 2
       Timeout: 60
@@ -184,7 +191,7 @@ Resources:
                   - logs:PutLogEvents
                 Effect: Allow
                 Resource:
-                  - !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:/aws/cloudfront/*'
+                  - !Sub 'arn:aws:logs:*:*:log-group:/aws/cloudfront/*'
         - PolicyName: AWSLambdaReplicator
           PolicyDocument:
             Version: '2012-10-17'

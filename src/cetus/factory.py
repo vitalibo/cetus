@@ -15,9 +15,9 @@ def create_job(config: Config) -> Job:
 
     return DistributionJob(
         S3Source(**dict(config.source)),
-        S3BlobFileSink(config.s3_bucket),
-        config.job,
-        LambdaEdge(config))
+        S3BlobFileSink(config.infra.bucket_name),
+        config.transform,
+        LambdaEdge(config.infra))
 
 
 def create_spark(config: Config) -> Spark:

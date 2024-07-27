@@ -24,10 +24,9 @@ class LambdaFunction:
     Manage AWS Lambda function.
     """
 
-    def __init__(self, function_name: str, bucket: str) -> None:
+    def __init__(self, function_name: str) -> None:
         self._client = boto3.client('lambda')
         self.function_name = function_name
-        self.bucket = bucket
 
     def update_function_code(self, src_code: str) -> str:
         """
