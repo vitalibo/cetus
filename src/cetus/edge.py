@@ -3,6 +3,7 @@ import json
 from pyxis.config import Config
 
 from cetus.aws.cloudformation import Stack
+from cetus.aws.cloudfront import Distribution
 from cetus.aws.lambda_func import LambdaFunction, code
 
 
@@ -24,6 +25,9 @@ class LambdaEdge:
         function_arn = func.update_function_code(code_str)
 
         stack = Stack(self.config.stack_name)
-        stack.update(
+        outputs = stack.update(
             InterceptorFunctionVersion=function_arn
         )
+
+        cloudfront = Distribution(outputs['CloudFrontDistributionId'])
+        cloudfront.invalidate('/*')

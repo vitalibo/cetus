@@ -12,7 +12,7 @@ class Stack:
         self._client = boto3.client('cloudformation')
         self.stack_name = stack_name
 
-    def update(self, **kwargs) -> None:
+    def update(self, **kwargs) -> dict[str, str]:
         """
         Updates a stack with new parameters values and waits for the update to complete.
 
@@ -42,3 +42,9 @@ class Stack:
         waiter = self._client.get_waiter('stack_update_complete')
         waiter.wait(StackName=self.stack_name)
         logging.info('Successfully updated stack')
+
+        outputs = self._client.describe_stacks(StackName=self.stack_name)['Stacks'][0]['Outputs']
+        return {
+            output['OutputKey']: output['OutputValue']
+            for output in outputs
+        }

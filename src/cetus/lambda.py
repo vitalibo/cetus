@@ -36,7 +36,7 @@ def handler(event, context):  # pylint: disable=unused-argument
         )
 
         return response(200, 'OK', body=body)
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         logging.error(e)
         return response(404, 'Not Found')
 
