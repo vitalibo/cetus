@@ -2,7 +2,7 @@
 
 ![status](https://github.com/vitalibo/cetus/actions/workflows/ci.yaml/badge.svg)
 
-Cetus is a high-performance, low-latency, global scale and cost-effective REST API for slowly changing data.
+Cetus is a high-performance, low-latency, global scale and cost-effective REST API for dense and slowly changing data.
 The core idea revolves around precomputing responses and leveraging cloud storage (S3) and CDN (CloudFront) to serve
 these responses, thus avoiding the need for always-on web servers, databases, and caches.
 
