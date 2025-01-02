@@ -44,7 +44,7 @@ retrieve the response body. The Lambda@Edge function is deployed globally, ensur
    CloudFront triggers a Lambda@Edge function to determine the file and offset. The Lambda@Edge function parses the
    request URL and calculates the file and offset, then uses S3 byte-range requests to retrieve the response body.
 
-![Diagram](https://fwtbbmf399.execute-api.us-east-1.amazonaws.com/Prod/svg?source=https://raw.githubusercontent.com/vitalibo/cetus/main/readme.md&name=diagram.svg)
+![Diagram](https://markdown-inline-svg.vitalibo.click/svg?source=https://raw.githubusercontent.com/vitalibo/cetus/main/readme.md&name=diagram.svg)
 
 <details> 
 <summary>SVG code</summary>
